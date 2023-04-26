@@ -1,5 +1,5 @@
 import * as bodyParser from 'body-parser';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { initialize } from 'express-openapi';
 
 const app = express();
@@ -10,9 +10,11 @@ initialize({
 	apiDoc: `${__dirname}/config/open-api.yaml`,
 	app,
 	paths: `${__dirname}/controllers`,
+	enableObjectCoercion: true,
 });
 
 const port = 3000;
+
 app.listen(port, () => {
 	console.log(`OpenAPI Service running @ http://127.0.0.1:${port}!\n`);
 	console.log(`Try any of these commands:`);

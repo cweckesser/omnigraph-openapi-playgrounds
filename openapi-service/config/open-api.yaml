@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.0.3
 
 info:
   version: 1.0.0
@@ -14,13 +14,6 @@ components:
       properties:
         message:
           type: string
-
-    PeopleResponse:
-      required:
-        - data
-      properties:
-        data:
-          $ref: "#/components/schemas/Person"
 
     Person:
       type: object
@@ -58,23 +51,3 @@ components:
           type: string
         position:
           type: string
-
-    ContactFields:
-      type: array
-      items:
-        type: string
-        enum: [email, phone]
-
-    EmploymentFields:
-      type: array
-      items:
-        type: string
-        enum: [department, position]
-
-    PersonFields:
-      type: object
-      properties:
-        contact:
-          $ref: "#/components/schemas/ContactFields"
-        employment:
-          $ref: "#/components/schemas/EmploymentFields"

@@ -1,10 +1,8 @@
 {
   "name": "openapi-service",
   "version": "1.0.0",
-  "keywords": [],
   "author": "cweckesser",
   "license": "MIT",
-  "main": "app.js",
 	"scripts": {
     "clean": "rimraf dist/",
 		"compile": "tsc",

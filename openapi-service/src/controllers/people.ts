@@ -10,6 +10,7 @@ const EmploymentFields = ['department', 'position'];
 
 export const GET: Operation = (req: Request, res: Response) => {
 	const { query } = req;
+	console.debug(`Incoming request with query parameters: ${JSON.stringify(query, null, 2)}`);
 	const id: string = query.id as string;
 	const fields = query.fields as any | {};
 	let contactFields: string[] = [];
@@ -66,7 +67,7 @@ export const GET: Operation = (req: Request, res: Response) => {
 			return p;
 		});
 
-	return res.json(responsePayload);
+	return res.status(200).json(responsePayload);
 };
 
 GET.apiDoc = {
@@ -88,7 +89,23 @@ GET.apiDoc = {
 			description: 'The "contact" and "employment" fields to include for the retrieve person/people',
 			required: false,
 			schema: {
-				$ref: '#/components/schemas/PersonFields',
+				type: 'object',
+				properties: {
+					contact: {
+						type: 'array',
+						items: {
+							type: 'string',
+							enum: ['email', 'phone'],
+						},
+					},
+					employment: {
+						type: 'array',
+						items: {
+							type: 'string',
+							enum: ['department', 'position'],
+						},
+					},
+				},
 			},
 			style: 'deepObject',
 			explode: true,
@@ -100,7 +117,10 @@ GET.apiDoc = {
 			content: {
 				['application/json']: {
 					schema: {
-						$ref: '#/components/schemas/PeopleResponse',
+						type: 'array',
+						items: {
+							$ref: '#/components/schemas/Person',
+						}
 					},
 				},
 			},
