@@ -8,16 +8,19 @@ import { PersonDao } from '../daos/person-dao';
 export const GET: Operation = (req: Request, res: Response) => {
 	const { query } = req;
 	debug(`\nIncoming request with query parameters: ${JSON.stringify(query, null, 2)}\n`);
+
 	const id: string = query.id as string;
 	const fields = query.fields as any | {};
-	let contactFields: string[] = [];
 	const { contact, employment } = fields;
+
+	let contactFields: string[] = [];
 	if (contact) {
 		contactFields = typeof contact === 'string'
 			? contact.split(',')
 			: contact;
 		contactFields = contactFields.map((cf) => cf.toLowerCase());
 	}
+
 	let employmentFields: string[] = [];
 	if (employment) {
 		employmentFields = typeof employment === 'string'
@@ -66,31 +69,30 @@ GET.apiDoc = {
 			},
 		},
 		{
-			name: 'fields',
+			name: 'fields[contact]',
 			in: 'query',
-			description: 'The "contact" and "employment" fields to include for the retrieve person/people',
+			description: 'The "contact" fields to include for the retrieve person/people',
 			required: false,
 			schema: {
-				type: 'object',
-				properties: {
-					contact: {
-						type: 'array',
-						items: {
-							type: 'string',
-							enum: ['email', 'phone'],
-						},
-					},
-					employment: {
-						type: 'array',
-						items: {
-							type: 'string',
-							enum: ['department', 'position'],
-						},
-					},
+				type: 'array',
+				items: {
+					type: 'string',
+					enum: ['email', 'phone'],
 				},
 			},
-			style: 'deepObject',
-			explode: true,
+		},
+		{
+			name: 'fields[employment]',
+			in: 'query',
+			description: 'The "employment" fields to include for the retrieve person/people',
+			required: false,
+			schema: {
+				type: 'array',
+				items: {
+					type: 'string',
+					enum: ['department', 'position'],
+				},
+			},
 		},
 	],
 	responses: {
