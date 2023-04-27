@@ -1,4 +1,5 @@
-# omnigraph-openapi-playgrounds
+# OmniGraph OpenAPI Playgrounds
+
 Playgrounds for testing the OmniGraph OpenAPI library.
 
 This project is structured into the following sub-projects:
