@@ -21,3 +21,5 @@ yarn start
 ```
 
 3. Verify that the service is accessible at `http://127.0.0.1:3000/people`
+
+4. API docs for the service should also be accessible at `http://localhost:3000/api-docs`

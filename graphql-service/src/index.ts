@@ -1,32 +1,30 @@
-import { stitchSchemas } from '@graphql-tools/stitch';
-import { createBundle, getGraphQLSchemaFromBundle } from '@omnigraph/openapi';
+import { loadGraphQLSchemaFromOpenAPI } from '@omnigraph/openapi';
 import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
+import { ExecutionArgs, ExecutionResult, execute } from 'graphql';
 
 const app = express();
 
 const port = 3001;
 
 (async () => {
-	const openApiServiceBundle = await createBundle('openapi-service', {
+	const openApiServiceSchema = await loadGraphQLSchemaFromOpenAPI('openapi-service', {
 		cwd: './',
-		oasFilePath: './schemas/openapi-service/schema.json',
-		baseUrl: 'http://localhost:3000',
+		source: './schemas/openapi-service/schema.json',
+		endpoint: 'http://localhost:3000',
 	});
-	const openApiServiceSchema = await getGraphQLSchemaFromBundle(openApiServiceBundle);
-	const openApiServiceSubSchemaConfig = {
-		schema: openApiServiceSchema,
-	};
-
-	const subschemas = [openApiServiceSubSchemaConfig];
-
-	const schema = stitchSchemas({ subschemas });
 
 	app.use(
 		'/graphql',
 		graphqlHTTP({
-			schema,
+			schema: openApiServiceSchema,
 			graphiql: true,
+			customExecuteFn: async (
+				args: ExecutionArgs,
+			): Promise<ExecutionResult> => {
+				const result = await execute(args);
+				return result;
+			},
 		}),
 	);
 

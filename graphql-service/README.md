@@ -40,11 +40,11 @@ The following query retrieves all the people from the OpenAPI Service.
 Notice that the OpenAPI Service implements fetching if sparse fieldsets, which are specified via filters. For more information on this, see the [OpenAPI Service documentation](/openapi-service/README.md). This means that any fields not included in the `fields_LEFT_SQUARE_BRACE_<SOME_TYPE>_RIGHT_SQUARE_BRACE_` input filters will not be fetched, regardless of them being specified in the body of the `getPeople` query.
 
 ```graphql
-{
-  getPeople(input: {
+query {
+  getPeople(
     fields_LEFT_SQUARE_BRACE_contact_RIGHT_SQUARE_BRACE_: [email, phone]
    	fields_LEFT_SQUARE_BRACE_employment_RIGHT_SQUARE_BRACE_: [position, department]
-  }) {
+  ) {
     ... on Person {
       id
       firstName
@@ -57,6 +57,9 @@ Notice that the OpenAPI Service implements fetching if sparse fieldsets, which a
         position
         department
       }
+    }
+    ... on ErrorResponse {
+      message
     }
   }
 }
