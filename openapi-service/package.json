@@ -6,8 +6,7 @@
 	"scripts": {
     "clean": "rimraf dist/",
 		"compile": "tsc",
-		"copy-resources": "cp -a ./config ./dist/config",
-    "build": "run-s clean compile copy-resources",
+    "build": "run-s clean compile",
 		"watch": "nodemon",
     "start": "node dist/index.js"
   },

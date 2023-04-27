@@ -1,16 +1,13 @@
 import { Request, Response } from 'express';
 import { Operation } from 'express-openapi';
-import { cloneDeep, difference, isEmpty } from 'lodash';
 
+import { debug } from '../helpers/logger';
 import { Contact, Employment } from '../models/person-model';
 import { PersonDao } from '../daos/person-dao';
 
-const ContactFields = ['email', 'phone'];
-const EmploymentFields = ['department', 'position'];
-
 export const GET: Operation = (req: Request, res: Response) => {
 	const { query } = req;
-	console.debug(`Incoming request with query parameters: ${JSON.stringify(query, null, 2)}`);
+	debug(`\nIncoming request with query parameters: ${JSON.stringify(query, null, 2)}\n`);
 	const id: string = query.id as string;
 	const fields = query.fields as any | {};
 	let contactFields: string[] = [];
@@ -20,13 +17,6 @@ export const GET: Operation = (req: Request, res: Response) => {
 			? contact.split(',')
 			: contact;
 		contactFields = contactFields.map((cf) => cf.toLowerCase());
-		// Remove invalid values
-		const invalidValues = difference(contactFields, ContactFields);
-		if (!isEmpty(invalidValues)) {
-			return res.status(400).send({
-				message: `Invalid contact field/s ${invalidValues.join(', ')}.`,
-			});
-		}
 	}
 	let employmentFields: string[] = [];
 	if (employment) {
@@ -34,18 +24,10 @@ export const GET: Operation = (req: Request, res: Response) => {
 			? employment.split(',')
 			: employment;
 		employmentFields = employmentFields.map((ef) => ef.toLowerCase());
-		// Remove invalid values
-		const invalidValues = difference(employmentFields, EmploymentFields);
-		if (!isEmpty(invalidValues)) {
-			return res.status(400).send({
-				message: `Invalid employment field/s ${invalidValues.join(', ')}.`,
-			});
-		}
 	}
 
 	const responsePayload = new PersonDao().all()
 		.filter((p) => id === undefined || p.id === id)
-		.map(cloneDeep)
 		.map((p) => {
 			if (p.contact && contactFields.length > 0) {
 				p.contact = contactFields.reduce((acc: Contact, contactField: string) => {

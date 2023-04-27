@@ -1,3 +1,5 @@
+import { cloneDeep } from 'lodash'; 
+
 import { Person } from '../models/person-model';
 
 const mockData: Record<string, Person> = {
@@ -31,6 +33,7 @@ const mockData: Record<string, Person> = {
 
 export class PersonDao {
 	public all(): Person[] {
-		return Object.values(mockData)
+		// Always return a copy of the mock data so as to preserve it from potential mutation
+		return Object.values(cloneDeep(mockData))
 	}
 }
